@@ -1,8 +1,10 @@
 # Football-club-api
 
+____
+
 Football-club-api is an API oriented to the managment of football's club.
 
-## Installing
+## dependencies
 
 Install these package manager to use Football-club-api:
 

@@ -6,7 +6,7 @@ const SALT_WORK_FACTOR = 10
 
 //generate a random string of 15 char
 const randomString = () => {
-  Math.random().toString(36).substring(2, 15)
+  return Math.random().toString(36).substring(2, 15)
 }
 
 const userSchema = new Schema({
@@ -38,7 +38,7 @@ const userSchema = new Schema({
   },
   validated: {
     type: Boolean,
-    default: false
+    default: true
   },
   profilePicture: {
     type: String,

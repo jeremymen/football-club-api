@@ -37,7 +37,15 @@ const clubSchema = new Schema({
   },
   members: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    isOfficial: {
+      type: Boolean,
+      default: false
+    },
+    membershipNumber: {
+      type: String,
+      default: undefined
+    }
   }],
   events: {
     type: Schema.Types.ObjectId,
