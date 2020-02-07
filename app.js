@@ -41,7 +41,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (error, req, res, next) {
-  console.error('-' * 1000)
   console.error(error)
 
   res.status(error.status || 500)
