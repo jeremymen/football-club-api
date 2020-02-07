@@ -6,9 +6,9 @@ const clubsController = require('../controllers/clubs')
 const authenticationMiddleware = require('../middlewares/authentication')
 const upload = require('./cloudinary')
 
-//user
-router.post('/create', authenticationMiddleware.isNotAuthenticated, usersController.create)
-router.post('/login', authenticationMiddleware.isNotAuthenticated, usersController.login)
-router.post('/logout', authenticationMiddleware.isAuthenticated, usersController.logout)
+//base
+router.post('/create', authenticationMiddleware.isNotAuthenticated, baseController.create)
+router.post('/login', authenticationMiddleware.isNotAuthenticated, baseController.login)
+router.post('/logout', authenticationMiddleware.isAuthenticated, baseController.logout)
 
 module.exports = router
