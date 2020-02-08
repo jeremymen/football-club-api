@@ -5,6 +5,12 @@ const clubSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
+    trim: true,
+  },
+  username: {
+    type: String,
+    required: true,
     unique: true
   },
   admin: [{
@@ -30,35 +36,25 @@ const clubSchema = new Schema({
   },
   description: {
     type: String,
+    default: ''
   },
-  official: {
+  isOfficialClub: {
     type: Boolean,
     default: false,
   },
-  members: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    isOfficial: {
-      type: Boolean,
-      default: false
-    },
-    membershipNumber: {
-      type: String,
-      default: undefined
-    }
-  }],
   events: {
     type: Schema.Types.ObjectId,
     ref: 'Event'
   },
   address: {
-    type: String,
+    type: String
   },
   zipcode: {
     type: Number
   },
   city: {
-    type: String
+    type: String,
+    required: true
   }
 }, {
   timestamps: true,
@@ -73,6 +69,10 @@ const clubSchema = new Schema({
     }
   }
 })
+
+clubSchema.methods.createUsername = function (name) {
+  return name.split(' ').join('')
+}
 
 const Club = mongoose.model('Club', clubSchema)
 

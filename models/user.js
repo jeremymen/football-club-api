@@ -40,6 +40,10 @@ const userSchema = new Schema({
     type: Boolean,
     default: true
   },
+  club: {
+    type: Schema.Types.ObjectId,
+    ref: 'Club'
+  },
   profilePicture: {
     type: String,
     default: '../public/images/defaultUserProfilePicture.png'

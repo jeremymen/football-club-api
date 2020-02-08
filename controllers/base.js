@@ -13,7 +13,7 @@ module.exports.create = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
-  User.findOne({email})
+  User.findOne({ email })
     .then(user => {
       if(!user) {
         throw createError(404, 'user not found')
@@ -23,7 +23,7 @@ module.exports.login = (req, res, next) => {
             if (!match) {
               throw createError(400, 'invalid password')
             } else {
-              req.session.user = user;
+              req.session.user = user
               res.status(200).json(user)
             }
           })
