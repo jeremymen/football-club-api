@@ -7,16 +7,16 @@ const clubSchema = new Schema({
     required: true,
     unique: true,
     trim: true,
+    default: ''
   },
   username: {
     type: String,
-    required: true,
-    unique: true
+    unique: true,
+    lowercase: true,
   },
   admin: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true 
   }],
   teamCountry: {
     type: String,
@@ -70,9 +70,18 @@ const clubSchema = new Schema({
   }
 })
 
-clubSchema.methods.createUsername = function (name) {
-  return name.split(' ').join('')
-}
+clubSchema.pre('save', function(next) {
+  const club = this
+  club.username = club.name.split(' ').join('')
+  next()
+})
+
+clubSchema.pre('findOneAndUpdate', function(next) {
+  const club = this
+  club._update.username = club._update.name.split(' ').join('')
+  next()
+})
+
 
 const Club = mongoose.model('Club', clubSchema)
 

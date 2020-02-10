@@ -1,39 +1,20 @@
-const Club = require('../models/club')
-const User = require('../models/user')
+const Club = require('../lib/club')
+const User = require('../lib/user')
 const createError = require('http-errors')
 
 module.exports.create = (req, res, next) => {
+  const { body } = req
+  const userId = req.session.user.id
 
-  const { id } = req.session.user
-
-  User.findById(id)
-    .then(user => {
-      if (user.club) {
-        throw createError(403, 'user is already part of a club')
-      } else {
-
-        //set defaults values for any new club
-        req.body.admin = id
-        req.body.username = req.body.name.split(' ').join('')
-
-        Club.create(req.body)
-          .then(club => {
-            User.findByIdAndUpdate(
-              id, 
-              { club: club._id }, 
-              { new: true }
-            )
-              .then(()=> {
-                res.status(202).json(club)
-              })
-          })
-      }
+  Club.createAsAdmin(body, userId)
+    .then(club => {
+      res.status(200).json(club)
     })
     .catch(next)
 }
 
 module.exports.getClubs = (_, res, next) => {
-  Club.find()
+  Club.getAll()
     .then(clubs => {
       res.status(200).json(clubs)
     })
@@ -41,31 +22,65 @@ module.exports.getClubs = (_, res, next) => {
 }
 
 module.exports.getClub = (req, res, next) => {
-
   const { username } = req.params
 
-  Club.findOne({ username })
+  Club.get(username)
     .then(club => {
-      if (!club) {
-        throw createError(404, "club not found")
-      }
       res.status(200).json(club)
     })
     .catch(next)
 }
 
 module.exports.updateClub = (req, res, next) => {
-
   const { username } = req.params
-  req.body.username = req.body.name.split(' ').join('')
-
-  Club.findOneAndUpdate({ username }, req.body, { new: true })
+  const { body } = req
+  
+  Club.update(body, username)
     .then(club => {
-      if (!club) {
-        throw createError(404, "club not found")
-      } else {
-        res.status(200).json(club)
-      }
+      res.status(200).json(club)
+    })
+    .catch(next)
+}
+
+module.exports.subscribe = (req, res, next) => {
+  const userId = req.session.user.id
+  const { clubUsername } = req.params
+  
+  User.addAsMember(userId, clubUsername)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(next)
+}
+
+// module.exports.subscribe = (req, res, next) => {
+//   const { userUsername, clubUsername } = req.params
+
+//   User.findOne({ username: userUsername })
+//     .then(user => {
+//       Club.findOne({ username: clubUsername })
+//         .then(club => {
+//           if (user.club) {
+//             throw createError(403, 'user is already a member of a club')
+//           } else {
+//             User.findByIdAndUpdate(user.id, { club: club.id }, { new: true })
+//               .then(user => {
+//                 res.status(200).json(user)
+//               })
+//           }
+//         })
+//         .catch(next)
+//     })
+//     .catch(next)
+// }
+
+module.exports.unsubscribe = (req, res, next) => {
+  const userId = req.session.user.id
+  const { clubUsername } = req.params
+
+  User.removeAsMember(userId, clubUsername)
+    .then(user => {
+      res.status(200).json(user)
     })
     .catch(next)
 }

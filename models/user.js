@@ -17,7 +17,8 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    lowercase: true
   },
   email: {
     type: String,
@@ -42,7 +43,8 @@ const userSchema = new Schema({
   },
   club: {
     type: Schema.Types.ObjectId,
-    ref: 'Club'
+    ref: 'Club',
+    default: undefined
   },
   profilePicture: {
     type: String,
