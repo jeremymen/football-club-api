@@ -1,22 +1,20 @@
 const createError = require('http-errors')
-const Club = require('../models/club')
-const User = require('../models/user')
+const clubModel = require('../models/club')
+const userModel = require('../models/user')
+const ObjectId = require('mongoose').Types.ObjectId
 
-module.exports.isAdmin = (req, res, next) => {
+
+module.exports.isAdmin = (req, _, next) => {
   const { id }  = req.session.user
-  const { username } = req.params
+  const { clubUsername } = req.params
 
-  User.findById(id)
+  userModel.findById(id)
     .then(user => {
       if (!user) {
         throw createError(404, 'user not found')
       } else {
-        Club.findOne({ username })
+        clubModel.findOne({ username: clubUsername })
           .then(club => {
-            if (!club) {
-              throw createError(404, 'club not found')
-            } else {
-
               const isAdmin = club.admin.includes(id)
 
               if (isAdmin) {
@@ -24,32 +22,59 @@ module.exports.isAdmin = (req, res, next) => {
               } else {
                 throw createError(401, 'user is not authorizated')
               }
-            }
           })
           .catch(next)
       }
     })
 }
 
-module.exports.isNotTheLastAdmin = (req, res, next) => {
-  const { userUsername, clubUsername } = req.params
+module.exports.isNotAdmin = (req, _, next) => {
+  const { userUsername } = req.params
+  const searchingValue = ObjectId.isValid(userUsername) ?
+    { _id: userUsername} : { username: userUsername }
 
-  User.findOne({ username: userUsername })
+  userModel.findOne(searchingValue)
     .then(user => {
-      if (!user) {
-        throw createError(404, 'user not found')
+      if (!user.club) {
+        next()
       } else {
-        Club.findOne({ username: clubUsername })
+        club.findById(user.club)
           .then(club => {
-            const theLastAdmin = club.admin.length === 1 &&
+            const isAdmin = club.admin.includes(id)
+
+            if (!isAdmin) {
+              next()
+            } else {
+              throw createError(401, 'user is an admin')
+            }
+          })
+      }
+    })
+}
+
+module.exports.isNotTheLastAdmin = (req, res, next) => {
+  const { userUsername } = req.params
+  const searchingValue = ObjectId.isValid(userUsername) ?
+    { _id: userUsername} : { username: userUsername }
+
+  userModel.findOne(searchingValue)
+    .then(user => {
+      clubModel.findById(user.club)
+        .then(club => {
+          if(!user.club) {
+            next()
+          } else {
+            const istheLastAdmin = club.admin.length === 1 &&
               club.admin.includes(user.id)
-            if (theLastAdmin) {
-              throw createError(403, 'you are the only one admin! you cannot leave the club')
+  
+            if (istheLastAdmin) {
+              throw createError(403, 'you are the only one admin of your club!')
             } else {
               next()
             }
+          }
         })
-      }
+        .catch(next)
     })
     .catch(next)
 }

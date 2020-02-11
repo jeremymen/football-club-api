@@ -1,6 +1,4 @@
-const User = require('../models/user')
-const createError = require('http-errors')
-
+const User = require('../lib/user')
 
 module.exports.create = (req, res, next) => {
   User.create(req.body)
@@ -13,21 +11,10 @@ module.exports.create = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
-  User.findOne({ email })
+  User.login(email, password)
     .then(user => {
-      if(!user) {
-        throw createError(404, 'user not found')
-      } else {
-        user.checkPassword(password)
-          .then(match => {
-            if (!match) {
-              throw createError(400, 'invalid password')
-            } else {
-              req.session.user = user
-              res.status(200).json(user)
-            }
-          })
-      }
+      req.session.user = user
+      res.status(200).json(user)
     })
     .catch(next)
 }

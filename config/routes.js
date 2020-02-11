@@ -3,47 +3,95 @@ const router = express.Router()
 const baseController = require('../controllers/base')
 const usersController = require('../controllers/users')
 const clubsController = require('../controllers/clubs')
-const authenticationMiddleware = require('../middlewares/authentication')
+const authMiddleware = require('../middlewares/authentication')
 const adminMiddleware = require('../middlewares/administrator')
+const userMiddleware = require('../middlewares/user')
+const clubMiddleware = require('../middlewares/club')
 const membershipMiddleware = require('../middlewares/membership')
 const upload = require('./cloudinary')
 
-//base
-router.post('/create', authenticationMiddleware.isNotAuthenticated, baseController.create)
-router.post('/login', authenticationMiddleware.isNotAuthenticated, baseController.login)
-router.post('/logout', authenticationMiddleware.isAuthenticated, baseController.logout)
+/** 
+ * base's routes
+ */
+router.post(
+  '/create', 
+  authMiddleware.isNotAuthenticated, 
+  baseController.create
+)
+router.post(
+  '/login', 
+  authMiddleware.isNotAuthenticated, 
+  baseController.login
+)
+router.post(
+  '/logout', 
+  authMiddleware.isAuthenticated, 
+  baseController.logout
+)
 
-//user
-router.get('/users', authenticationMiddleware.isAuthenticated, usersController.getUsers)
-router.get('/users/:username', authenticationMiddleware.isAuthenticated, usersController.getUser)
-router.delete('/users/:username', authenticationMiddleware.isAuthenticated, usersController.deleteUser)
+/** 
+ * user's routes
+ */
+router.get(
+  '/users', 
+  authMiddleware.isAuthenticated, 
+  usersController.getUsers
+)
+router.get(
+  '/users/:userUsername', 
+  authMiddleware.isAuthenticated, 
+  userMiddleware.exist, 
+  usersController.getUser
+)
+router.delete(
+  '/users/:userUsername', 
+  authMiddleware.isAuthenticated,
+  userMiddleware.exist,
+  userMiddleware.isCurrentUser,
+  adminMiddleware.isNotTheLastAdmin,
+  usersController.deleteUser
+)
 
-//club
+/** 
+ * club's routes
+ */
 router.post(
   '/clubs', 
-  authenticationMiddleware.isAuthenticated, 
+  authMiddleware.isAuthenticated, 
   membershipMiddleware.notAMemberOfAnyClub, 
   clubsController.create
 )
-router.get('/clubs', authenticationMiddleware.isAuthenticated, clubsController.getClubs)
-router.get('/clubs/:username', authenticationMiddleware.isAuthenticated, clubsController.getClub)
+router.get(
+  '/clubs', 
+  authMiddleware.isAuthenticated, 
+  clubsController.getClubs
+)
+router.get(
+  '/clubs/:clubUsername', 
+  authMiddleware.isAuthenticated, 
+  clubMiddleware.exist,
+  clubsController.getClub
+)
 router.patch(
-  '/clubs/:username', 
-  authenticationMiddleware.isAuthenticated, 
+  '/clubs/:clubUsername', 
+  authMiddleware.isAuthenticated, 
+  clubMiddleware.exist,
   adminMiddleware.isAdmin, 
   clubsController.updateClub
 )
 router.post(
   '/clubs/:clubUsername/users/:userUsername/subscription',
-  authenticationMiddleware.isAuthenticated, 
+  authMiddleware.isAuthenticated, 
+  clubMiddleware.exist,
+  userMiddleware.isCurrentUser,
   membershipMiddleware.notAMemberOfAnyClub,
   clubsController.subscribe
 )
 router.delete(
   '/clubs/:clubUsername/users/:userUsername/unsubscription',
-  authenticationMiddleware.isAuthenticated, 
-  adminMiddleware.isNotTheLastAdmin,
-  membershipMiddleware.isFromThisClub,
+  authMiddleware.isAuthenticated, 
+  userMiddleware.exist,
+  membershipMiddleware.isMemberOfThisClub,
   clubsController.unsubscribe
 )
 

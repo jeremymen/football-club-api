@@ -1,11 +1,27 @@
 const createError = require('http-errors')
-const User = require('../models/user')
-const Club = require('../models/club')
+const userModel = require('../models/user')
+const clubModel = require('../models/club')
+const ObjectId = require('mongoose').Types.ObjectId
+
+module.exports.isMemberOfAClub = (req, res, next) => {
+  const { userUsername } = req.params
+  const searchingValue = ObjectId.isValid(userUsername) ?
+    { _id: userUsername} : { username: userUsername }
+
+  userModel.findOne(searchingValue)
+    .then(user => {
+      if (user.club) {
+        next()
+      } else {
+        throw createError(400, 'user is not a member of any club')
+      }
+    })
+}
 
 module.exports.notAMemberOfAnyClub = (req, _, next) => {
   const { id } = req.session.user
 
-  User.findById(id)
+  userModel.findById(id)
     .then(user => {
       if (!user.club) {
         next()
@@ -16,14 +32,21 @@ module.exports.notAMemberOfAnyClub = (req, _, next) => {
     .catch(next)
 }
 
-module.exports.isFromThisClub = (req, res, next) => {
+module.exports.isMemberOfThisClub = (req, _, next) => {
   const { userUsername, clubUsername } = req.params
-  
-  Club.findOne({ username: clubUsername })
+  const searchingValue = ObjectId.isValid(clubUsername) ?
+    { _id: clubUsername} : { username: clubUsername }
+
+  clubModel.findOne(searchingValue)
     .then(club => {
-      User.findOne({ username: userUsername })
+      userModel.findOne({ username: userUsername })
         .then(user => {
-          if (user.club == club.id) {
+          if (!user.club) {
+            throw createError(403, 'user is not part of any club')
+          }
+          const isMember = user.club.toString() === (club.id).toString()
+
+          if (isMember) {
             next()
           } else {
             throw createError(403, "you can't unsubscribe from this club")

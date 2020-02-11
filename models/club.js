@@ -72,15 +72,21 @@ const clubSchema = new Schema({
 
 clubSchema.pre('save', function(next) {
   const club = this
+  
   club.username = club.name.split(' ').join('')
   next()
 })
 
 clubSchema.pre('findOneAndUpdate', function(next) {
   const club = this
-  club._update.username = club._update.name.split(' ').join('')
+
+  if (club._update.name){
+    club._update.username = club._update.name.split(' ').join('')
+  }
   next()
 })
+
+
 
 
 const Club = mongoose.model('Club', clubSchema)

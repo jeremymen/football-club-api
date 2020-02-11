@@ -22,9 +22,9 @@ module.exports.getClubs = (_, res, next) => {
 }
 
 module.exports.getClub = (req, res, next) => {
-  const { username } = req.params
+  const { clubUsername } = req.params
 
-  Club.get(username)
+  Club.get(clubUsername)
     .then(club => {
       res.status(200).json(club)
     })
@@ -32,10 +32,10 @@ module.exports.getClub = (req, res, next) => {
 }
 
 module.exports.updateClub = (req, res, next) => {
-  const { username } = req.params
+  const { clubUsername } = req.params
   const { body } = req
   
-  Club.update(body, username)
+  Club.update(body, clubUsername)
     .then(club => {
       res.status(200).json(club)
     })
@@ -53,32 +53,11 @@ module.exports.subscribe = (req, res, next) => {
     .catch(next)
 }
 
-// module.exports.subscribe = (req, res, next) => {
-//   const { userUsername, clubUsername } = req.params
-
-//   User.findOne({ username: userUsername })
-//     .then(user => {
-//       Club.findOne({ username: clubUsername })
-//         .then(club => {
-//           if (user.club) {
-//             throw createError(403, 'user is already a member of a club')
-//           } else {
-//             User.findByIdAndUpdate(user.id, { club: club.id }, { new: true })
-//               .then(user => {
-//                 res.status(200).json(user)
-//               })
-//           }
-//         })
-//         .catch(next)
-//     })
-//     .catch(next)
-// }
-
 module.exports.unsubscribe = (req, res, next) => {
   const userId = req.session.user.id
-  const { clubUsername } = req.params
+  const { clubUsername, userUsername } = req.params
 
-  User.removeAsMember(userId, clubUsername)
+  User.removeAsMember(userId, userUsername, clubUsername)
     .then(user => {
       res.status(200).json(user)
     })
