@@ -46,13 +46,13 @@ router.patch(
 router.get(
   '/users', 
   authMiddleware.isAuthenticated, 
-  usersController.getOne
+  usersController.getAll
 )
 router.get(
   '/users/:userUsername', 
   authMiddleware.isAuthenticated, 
   userMiddleware.exist, 
-  usersController.getAll
+  usersController.getOne
 )
 router.delete(
   '/users/:userUsername', 
