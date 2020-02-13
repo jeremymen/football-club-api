@@ -36,16 +36,23 @@ router.post(
 /** 
  * user's routes
  */
+router.patch(
+  '/users/:userUsername',
+  authMiddleware.isAuthenticated, 
+  userMiddleware.exist, 
+  userMiddleware.isCurrentUser,
+  usersController.update
+)
 router.get(
   '/users', 
   authMiddleware.isAuthenticated, 
-  usersController.getUsers
+  usersController.getOne
 )
 router.get(
   '/users/:userUsername', 
   authMiddleware.isAuthenticated, 
   userMiddleware.exist, 
-  usersController.getUser
+  usersController.getAll
 )
 router.delete(
   '/users/:userUsername', 
@@ -53,7 +60,7 @@ router.delete(
   userMiddleware.exist,
   userMiddleware.isCurrentUser,
   adminMiddleware.isNotTheLastAdmin,
-  usersController.deleteUser
+  usersController.delete
 )
 
 /** 
@@ -68,20 +75,20 @@ router.post(
 router.get(
   '/clubs', 
   authMiddleware.isAuthenticated, 
-  clubsController.getClubs
+  clubsController.getAll
 )
 router.get(
   '/clubs/:clubUsername', 
   authMiddleware.isAuthenticated, 
   clubMiddleware.exist,
-  clubsController.getClub
+  clubsController.getOne
 )
 router.patch(
   '/clubs/:clubUsername', 
   authMiddleware.isAuthenticated, 
   clubMiddleware.exist,
   adminMiddleware.isAdmin, 
-  clubsController.updateClub
+  clubsController.update
 )
 router.get(
   '/clubs/:clubUsername/users',
@@ -106,7 +113,7 @@ router.delete(
 )
 
 /** 
- * club's routes
+ * event's routes
  */
 router.post(
   '/clubs/:clubUsername/event',

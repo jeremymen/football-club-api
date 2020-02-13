@@ -1,6 +1,6 @@
 const User = require('../lib/user')
 
-module.exports.getUsers = (_, res, next) => {
+module.exports.getAll = (_, res, next) => {
   User.getAll()
     .then(users => {
       res.status(200).json(users)
@@ -8,7 +8,7 @@ module.exports.getUsers = (_, res, next) => {
     .catch(next)
 }
 
-module.exports.getUser = (req, res, next) => {
+module.exports.getOne = (req, res, next) => {
   const { userUsername } = req.params
 
   User.get(userUsername)
@@ -18,7 +18,7 @@ module.exports.getUser = (req, res, next) => {
     .catch(next)
 }
 
-module.exports.deleteUser = (req, res, next) => {
+module.exports.delete = (req, res, next) => {
   const { userUsername } = req.params
 
   User.delete(userUsername)

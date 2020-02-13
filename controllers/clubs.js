@@ -13,7 +13,7 @@ module.exports.create = (req, res, next) => {
     .catch(next)
 }
 
-module.exports.getClubs = (_, res, next) => {
+module.exports.getAll = (_, res, next) => {
   Club.getAll()
     .then(clubs => {
       res.status(200).json(clubs)
@@ -21,7 +21,7 @@ module.exports.getClubs = (_, res, next) => {
     .catch(next)
 }
 
-module.exports.getClub = (req, res, next) => {
+module.exports.getOne = (req, res, next) => {
   const { clubUsername } = req.params
 
   Club.get(clubUsername)
@@ -31,7 +31,7 @@ module.exports.getClub = (req, res, next) => {
     .catch(next)
 }
 
-module.exports.updateClub = (req, res, next) => {
+module.exports.update = (req, res, next) => {
   const { clubUsername } = req.params
   const { body } = req
   
