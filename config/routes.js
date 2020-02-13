@@ -1,14 +1,18 @@
 const express = require('express')
 const router = express.Router()
+const upload = require('./cloudinary')
+
 const baseController = require('../controllers/base')
 const usersController = require('../controllers/users')
 const clubsController = require('../controllers/clubs')
+const eventController = require('../controllers/events')
+
 const authMiddleware = require('../middlewares/authentication')
 const adminMiddleware = require('../middlewares/administrator')
 const userMiddleware = require('../middlewares/user')
 const clubMiddleware = require('../middlewares/club')
 const membershipMiddleware = require('../middlewares/membership')
-const upload = require('./cloudinary')
+
 
 /** 
  * base's routes
@@ -79,6 +83,12 @@ router.patch(
   adminMiddleware.isAdmin, 
   clubsController.updateClub
 )
+router.get(
+  '/clubs/:clubUsername/users',
+  authMiddleware.isAuthenticated, 
+  clubMiddleware.exist,
+  clubsController.getUsers
+)
 router.post(
   '/clubs/:clubUsername/users/:userUsername/subscription',
   authMiddleware.isAuthenticated, 
@@ -93,6 +103,18 @@ router.delete(
   userMiddleware.exist,
   membershipMiddleware.isMemberOfThisClub,
   clubsController.unsubscribe
+)
+
+/** 
+ * club's routes
+ */
+router.post(
+  '/clubs/:clubUsername/event',
+  authMiddleware.isAuthenticated,
+  clubMiddleware.exist,
+  membershipMiddleware.isMemberOfThisClub,
+  adminMiddleware.isAdmin,
+  eventController.create
 )
 
 

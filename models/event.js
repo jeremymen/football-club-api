@@ -16,20 +16,25 @@ const eventSchema = new Schema({
     required: true
   },
   time: {
-    type: Number,
+    type: String,
     required: true
   },
   createdBy: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
+  },
+  club: {
+    type: Schema.Types.ObjectId,
+    ref: 'Club',
+    required: true
   },
   participants: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   }],
-  resultOfTheGame: {
-    type: String,
-    default: ''
+  numberOfParticipant: {
+    type: Number,
   }
 }, {
   timestamps: true,
@@ -44,6 +49,14 @@ const eventSchema = new Schema({
     }
   }
 })
+
+function defaultNumberOfParticipants(next) {
+  const event = this
+  event.numberOfParticipant = event.participants.length
+  next()
+}
+
+eventSchema.pre('save', defaultNumberOfParticipants)
 
 const Event = mongoose.model('Event', eventSchema)
 

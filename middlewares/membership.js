@@ -33,7 +33,11 @@ module.exports.notAMemberOfAnyClub = (req, _, next) => {
 }
 
 module.exports.isMemberOfThisClub = (req, _, next) => {
-  const { userUsername, clubUsername } = req.params
+  const { clubUsername } = req.params
+
+  const userUsername = req.params.userUsername ? 
+    req.params.userUsername : req.session.user.username
+
   const searchingValue = ObjectId.isValid(clubUsername) ?
     { _id: clubUsername} : { username: clubUsername }
 
@@ -49,7 +53,7 @@ module.exports.isMemberOfThisClub = (req, _, next) => {
           if (isMember) {
             next()
           } else {
-            throw createError(403, "you can't unsubscribe from this club")
+            throw createError(403, "user is not authorizated")
           }
         })
         .catch(next)

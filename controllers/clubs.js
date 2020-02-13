@@ -42,6 +42,16 @@ module.exports.updateClub = (req, res, next) => {
     .catch(next)
 }
 
+module.exports.getUsers = (req, res, next) => {
+  const { clubUsername } = req.params
+
+  Club.getAllUsers(clubUsername)
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(next)
+}
+
 module.exports.subscribe = (req, res, next) => {
   const userId = req.session.user.id
   const { clubUsername } = req.params

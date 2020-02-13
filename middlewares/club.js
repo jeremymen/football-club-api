@@ -2,7 +2,7 @@ const createError = require('http-errors')
 const clubModel = require('../models/club')
 const ObjectId = require('mongoose').Types.ObjectId
 
-module.exports.exist = (req, res, next) => {
+module.exports.exist = (req, _, next) => {
   const { clubUsername } = req.params
   const searchingValue = ObjectId.isValid(clubUsername) ?
     { _id: clubUsername} : { username: clubUsername }

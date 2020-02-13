@@ -28,6 +28,9 @@ module.exports.isCurrentUser = (req, _, next) => {
     .then(user => {
       const currentUser = id.toString() === (user.id).toString()
 
+      console.log(id.toString())
+      console.log(user.id.toString())
+
       if(!currentUser) {
         throw createError(401, 'user is not authorizated')
       } else {

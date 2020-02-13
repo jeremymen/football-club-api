@@ -42,10 +42,6 @@ const clubSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  events: {
-    type: Schema.Types.ObjectId,
-    ref: 'Event'
-  },
   address: {
     type: String
   },
@@ -86,6 +82,19 @@ clubSchema.pre('findOneAndUpdate', function(next) {
   next()
 })
 
+clubSchema.virtual('users', {
+  ref: 'User',
+  localField: '_id',
+  foreignField: 'club',
+  justOne: false,
+})
+
+clubSchema.virtual('allEvents', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'club',
+  justOne: false,
+})
 
 
 
