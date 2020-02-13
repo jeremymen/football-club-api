@@ -107,6 +107,7 @@ router.delete(
   '/clubs/:clubUsername/users/:userUsername/unsubscription',
   authMiddleware.isAuthenticated, 
   existMiddleware.userExist,
+  existMiddleware.clubExist,
   membershipMiddleware.isMemberOfThisClub,
   clubsController.unsubscribe
 )
@@ -118,7 +119,6 @@ router.post(
   '/clubs/:clubUsername/event',
   authMiddleware.isAuthenticated,
   existMiddleware.clubExist,
-  membershipMiddleware.isMemberOfThisClub,
   adminMiddleware.isAdmin,
   eventController.create
 )

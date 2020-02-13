@@ -1,14 +1,11 @@
+const User = require('../lib/user')
+const Club = require('../lib/club')
 const createError = require('http-errors')
-const userModel = require('../models/user')
-const clubModel = require('../models/club')
-const ObjectId = require('mongoose').Types.ObjectId
 
-module.exports.isMemberOfAClub = (req, res, next) => {
+module.exports.isMemberOfAClub = (req, _, next) => {
   const { userUsername } = req.params
-  const searchingValue = ObjectId.isValid(userUsername) ?
-    { _id: userUsername} : { username: userUsername }
 
-  userModel.findOne(searchingValue)
+  User.getOne(userUsername) 
     .then(user => {
       if (user.club) {
         next()
@@ -16,12 +13,13 @@ module.exports.isMemberOfAClub = (req, res, next) => {
         throw createError(400, 'user is not a member of any club')
       }
     })
+    .catch(next)
 }
 
 module.exports.notAMemberOfAnyClub = (req, _, next) => {
   const { id } = req.session.user
 
-  userModel.findById(id)
+  User.getOne(id)
     .then(user => {
       if (!user.club) {
         next()
@@ -33,22 +31,16 @@ module.exports.notAMemberOfAnyClub = (req, _, next) => {
 }
 
 module.exports.isMemberOfThisClub = (req, _, next) => {
-  const { clubUsername } = req.params
+  const { clubUsername, userUsername } = req.params
 
-  const userUsername = req.params.userUsername ? 
-    req.params.userUsername : req.session.user.username
-
-  const searchingValue = ObjectId.isValid(clubUsername) ?
-    { _id: clubUsername} : { username: clubUsername }
-
-  clubModel.findOne(searchingValue)
+  Club.getOne(clubUsername)
     .then(club => {
-      userModel.findOne({ username: userUsername })
+      return User.getOne(userUsername)
         .then(user => {
           if (!user.club) {
             throw createError(403, 'user is not part of any club')
           }
-          const isMember = user.club.toString() === (club.id).toString()
+          const isMember = user.club.toString() === (club.id). toString()
 
           if (isMember) {
             next()
@@ -56,6 +48,6 @@ module.exports.isMemberOfThisClub = (req, _, next) => {
             throw createError(403, "user is not authorizated")
           }
         })
-        .catch(next)
     })
+    .catch(next)
 }
