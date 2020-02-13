@@ -24,7 +24,7 @@ module.exports.getAll = (_, res, next) => {
 module.exports.getOne = (req, res, next) => {
   const { clubUsername } = req.params
 
-  Club.get(clubUsername)
+  Club.getOne(clubUsername)
     .then(club => {
       res.status(200).json(club)
     })

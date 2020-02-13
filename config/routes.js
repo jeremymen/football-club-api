@@ -9,9 +9,8 @@ const eventController = require('../controllers/events')
 
 const authMiddleware = require('../middlewares/authentication')
 const adminMiddleware = require('../middlewares/administrator')
-const userMiddleware = require('../middlewares/user')
-const clubMiddleware = require('../middlewares/club')
 const membershipMiddleware = require('../middlewares/membership')
+const existMiddleware = require('../middlewares/exist')
 
 
 /** 
@@ -39,8 +38,8 @@ router.post(
 router.patch(
   '/users/:userUsername',
   authMiddleware.isAuthenticated, 
-  userMiddleware.exist, 
-  userMiddleware.isCurrentUser,
+  existMiddleware.userExist, 
+  authMiddleware.isCurrentUser,
   usersController.update
 )
 router.get(
@@ -51,14 +50,14 @@ router.get(
 router.get(
   '/users/:userUsername', 
   authMiddleware.isAuthenticated, 
-  userMiddleware.exist, 
+  existMiddleware.userExist, 
   usersController.getOne
 )
 router.delete(
   '/users/:userUsername', 
   authMiddleware.isAuthenticated,
-  userMiddleware.exist,
-  userMiddleware.isCurrentUser,
+  existMiddleware.userExist,
+  authMiddleware.isCurrentUser,
   adminMiddleware.isNotTheLastAdmin,
   usersController.delete
 )
@@ -80,34 +79,34 @@ router.get(
 router.get(
   '/clubs/:clubUsername', 
   authMiddleware.isAuthenticated, 
-  clubMiddleware.exist,
+  existMiddleware.clubExist,
   clubsController.getOne
 )
 router.patch(
   '/clubs/:clubUsername', 
   authMiddleware.isAuthenticated, 
-  clubMiddleware.exist,
+  existMiddleware.clubExist,
   adminMiddleware.isAdmin, 
   clubsController.update
 )
 router.get(
   '/clubs/:clubUsername/users',
   authMiddleware.isAuthenticated, 
-  clubMiddleware.exist,
+  existMiddleware.clubExist,
   clubsController.getUsers
 )
 router.post(
   '/clubs/:clubUsername/users/:userUsername/subscription',
   authMiddleware.isAuthenticated, 
-  clubMiddleware.exist,
-  userMiddleware.isCurrentUser,
+  existMiddleware.clubExist,
+  authMiddleware.isCurrentUser,
   membershipMiddleware.notAMemberOfAnyClub,
   clubsController.subscribe
 )
 router.delete(
   '/clubs/:clubUsername/users/:userUsername/unsubscription',
   authMiddleware.isAuthenticated, 
-  userMiddleware.exist,
+  existMiddleware.userExist,
   membershipMiddleware.isMemberOfThisClub,
   clubsController.unsubscribe
 )
@@ -118,7 +117,7 @@ router.delete(
 router.post(
   '/clubs/:clubUsername/event',
   authMiddleware.isAuthenticated,
-  clubMiddleware.exist,
+  existMiddleware.clubExist,
   membershipMiddleware.isMemberOfThisClub,
   adminMiddleware.isAdmin,
   eventController.create
