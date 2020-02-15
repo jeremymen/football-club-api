@@ -2,6 +2,7 @@ const User = require('../lib/user')
 const Club = require('../lib/club')
 const Event = require('../lib/event')
 const createError = require('http-errors')
+const ObjectId = require('mongoose').Types.ObjectId
 
 
 module.exports.userExist = (req, _, next) => {
@@ -30,4 +31,25 @@ module.exports.clubExist = (req, _, next) => {
       }
     })
     .catch(next)
+}
+
+module.exports.eventExist = (req, _, next) => {
+  const { eventId } = req.params
+  
+  if (ObjectId.isValid(eventId)) {
+    newEvent = new Event
+  
+    newEvent.getOne(eventId)
+      .then(event => {
+        if (!event) {
+          throw createError(404, "event not found")
+        }
+        else {
+          next()
+        }
+      })
+      .catch(next)
+  } else {
+    throw createError(404, "event not found")
+  }
 }

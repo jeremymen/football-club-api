@@ -89,6 +89,13 @@ router.patch(
   adminMiddleware.isAdmin, 
   clubsController.update
 )
+router.delete(
+  '/clubs/:clubUsername',
+  authMiddleware.isAuthenticated, 
+  existMiddleware.clubExist,
+  adminMiddleware.isAdmin, 
+  clubsController.delete
+)
 router.get(
   '/clubs/:clubUsername/users',
   authMiddleware.isAuthenticated, 
@@ -99,6 +106,7 @@ router.post(
   '/clubs/:clubUsername/users/:userUsername/subscription',
   authMiddleware.isAuthenticated, 
   existMiddleware.clubExist,
+  existMiddleware.userExist,
   authMiddleware.isCurrentUser,
   membershipMiddleware.notAMemberOfAnyClub,
   clubsController.subscribe
@@ -115,13 +123,37 @@ router.delete(
 /** 
  * event's routes
  */
+router.get(
+  '/events',
+  authMiddleware.isAuthenticated,
+  eventController.getAll
+)
+router.get(
+  '/events/:eventId',
+  authMiddleware.isAuthenticated,
+  existMiddleware.eventExist,
+  eventController.getOne
+)
 router.post(
-  '/clubs/:clubUsername/event',
+  '/events/clubs/:clubUsername',
   authMiddleware.isAuthenticated,
   existMiddleware.clubExist,
   adminMiddleware.isAdmin,
   eventController.create
 )
-
+router.get(
+  '/events/clubs/:clubUsername',
+  authMiddleware.isAuthenticated,
+  existMiddleware.clubExist,
+  eventController.getClubEvents
+)
+router.post(
+  '/events/:eventId/users/:userUsername/participation',
+  authMiddleware.isAuthenticated,
+  existMiddleware.userExist,
+  existMiddleware.eventExist,
+  authMiddleware.isCurrentUser,
+  eventController.participate
+)
 
 module.exports = router
