@@ -77,3 +77,14 @@ module.exports.participate = (req, res, next) => {
     .catch(next)
 }
 
+module.exports.delete = (req, res, next) => {
+  const { eventId } = req.params
+
+  newEvent = new Event
+
+  newEvent.delete(eventId)
+    .then(event => {
+      res.status(200).json(event)
+    })
+    .catch(next)
+}

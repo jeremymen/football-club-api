@@ -134,6 +134,13 @@ router.get(
   existMiddleware.eventExist,
   eventController.getOne
 )
+router.delete(
+  '/events/:eventId/clubs/:clubUsername',
+  authMiddleware.isAuthenticated,
+  existMiddleware.eventExist,
+  adminMiddleware.isAdmin,
+  eventController.delete
+)
 router.post(
   '/events/clubs/:clubUsername',
   authMiddleware.isAuthenticated,

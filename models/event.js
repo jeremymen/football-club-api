@@ -58,6 +58,13 @@ function defaultNumberOfParticipants(next) {
 
 eventSchema.pre('save', defaultNumberOfParticipants)
 
+eventSchema.pre('findOneAndUpdate', function () {
+  const event = this
+  if (event._update.participants){
+    event._update.numberOfParticipant = event._update.participants.length
+  }
+})
+
 const Event = mongoose.model('Event', eventSchema)
 
 module.exports = Event
