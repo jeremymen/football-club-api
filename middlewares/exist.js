@@ -53,3 +53,19 @@ module.exports.eventExist = (req, _, next) => {
     throw createError(404, "event not found")
   }
 }
+
+module.exports.leagueExist = (req, _, next) => {
+  const { leagueName } = req.params
+  const leagues = [
+    'seriea', 
+    'premierleague',
+    'leagueone',
+    'laliga'
+  ]
+  
+  if (!leagues.includes(leagueName.toLowerCase())) {
+    throw createError(404, "league not found")
+  } else {
+    next()
+  }
+}

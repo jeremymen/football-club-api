@@ -6,6 +6,7 @@ const baseController = require('../controllers/base')
 const usersController = require('../controllers/users')
 const clubsController = require('../controllers/clubs')
 const eventController = require('../controllers/events')
+const apiFootballController = require('../controllers/apiFootball')
 
 const authMiddleware = require('../middlewares/authentication')
 const adminMiddleware = require('../middlewares/administrator')
@@ -162,5 +163,28 @@ router.post(
   authMiddleware.isCurrentUser,
   eventController.participate
 )
+
+/** 
+ * team's routes
+ */
+
+router.get(
+  '/leagues',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getLeagues
+)
+router.get(
+  '/leagues/:leagueName',
+  authMiddleware.isAuthenticated,
+  existMiddleware.leagueExist,
+  apiFootballController.getOneLeague
+)
+router.get(
+  '/leagues/:leagueName/teams',
+  authMiddleware.isAuthenticated,
+  existMiddleware.leagueExist,
+  apiFootballController.getTeams
+)
+
 
 module.exports = router

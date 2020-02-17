@@ -16,7 +16,7 @@ module.exports.create = (req, res, next) => {
     .catch(next)
 }
 
-module.exports.getAll = (req, res, next) => {
+module.exports.getAll = (_, res, next) => {
   newEvent = new Event
 
   newEvent.getAll()
