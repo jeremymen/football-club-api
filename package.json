@@ -4,11 +4,14 @@
   "description": "api of FootballClubs",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "seeds": "node ./bin/seeds",
+    "dev": "nodemon app.js"
   },
   "author": "JeremyMen",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.7",
     "cloudinary": "^1.19.0",
     "connect-mongo": "^3.2.0",
@@ -23,6 +26,7 @@
     "mongoose": "^5.8.11",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
-    "multer-storage-cloudinary": "^2.2.1"
+    "multer-storage-cloudinary": "^2.2.1",
+    "nodemon": "^2.0.2"
   }
 }

@@ -7,9 +7,9 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 
-require('./config/db.config')
-const session = require('./config/session.config')
-const cors = require('./config/cors.config')
+require('./config/db')
+const session = require('./config/session')
+const cors = require('./config/cors')
 
 /**
  * Configure express
@@ -41,7 +41,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (error, req, res, next) {
-  console.error('-' * 1000)
   console.error(error)
 
   res.status(error.status || 500)

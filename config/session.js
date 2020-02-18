@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const SESSION_MAX_AGE_SECONDS = Number(process.env.SESSION_MAX_AGE_SECONDS) || 60 * 60 * 24 * 7
 
 module.exports = session({
-  secret: process.env.SESSION_SECRET || 'Super Secret (change it)',
+  secret: process.env.SESSION_SECRET || 'Super Secret',
   resave: true,
   saveUninitialized: false,
   cookie: {
