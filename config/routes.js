@@ -188,6 +188,10 @@ router.get(
   authMiddleware.isAuthenticated,
   apiFootballController.getNextMatches
 )
-
+router.get(
+  '/leagueTable/:leagueName/country/:countryName',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getLeagueTable
+)
 
 module.exports = router
