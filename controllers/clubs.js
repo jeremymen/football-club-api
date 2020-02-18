@@ -1,6 +1,5 @@
 const Club = require('../lib/club')
 const User = require('../lib/user')
-const createError = require('http-errors')
 
 module.exports.create = (req, res, next) => {
   const { body } = req

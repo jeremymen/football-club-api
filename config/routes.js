@@ -169,21 +169,24 @@ router.post(
  */
 
 router.get(
-  '/leagues',
+  '/teams/:teamName',
   authMiddleware.isAuthenticated,
-  apiFootballController.getLeagues
+  apiFootballController.getTeam
 )
 router.get(
-  '/leagues/:leagueName',
+  '/league/:leagueName',
   authMiddleware.isAuthenticated,
-  existMiddleware.leagueExist,
-  apiFootballController.getOneLeague
+  apiFootballController.getLeague
 )
 router.get(
-  '/leagues/:leagueName/teams',
+  '/matches/team/:teamName/last/:numberOfMatches',
   authMiddleware.isAuthenticated,
-  existMiddleware.leagueExist,
-  apiFootballController.getTeams
+  apiFootballController.getLastMatches
+)
+router.get(
+  '/matches/team/:teamName/next/:numberOfMatches',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getNextMatches
 )
 
 

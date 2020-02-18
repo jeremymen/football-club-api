@@ -1,6 +1,7 @@
 const User = require('../lib/user')
 const Club = require('../lib/club')
 const Event = require('../lib/event')
+const ApiFootball = require('../lib/services/apiFootball')
 const createError = require('http-errors')
 const ObjectId = require('mongoose').Types.ObjectId
 
@@ -51,21 +52,5 @@ module.exports.eventExist = (req, _, next) => {
       .catch(next)
   } else {
     throw createError(404, "event not found")
-  }
-}
-
-module.exports.leagueExist = (req, _, next) => {
-  const { leagueName } = req.params
-  const leagues = [
-    'seriea', 
-    'premierleague',
-    'leagueone',
-    'laliga'
-  ]
-  
-  if (!leagues.includes(leagueName.toLowerCase())) {
-    throw createError(404, "league not found")
-  } else {
-    next()
   }
 }
