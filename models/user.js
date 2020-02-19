@@ -71,15 +71,20 @@ userSchema.methods.checkPassword = function (password) {
 
 userSchema.pre('save', function (next) {
   const user = this
-  bcrypt.genSalt(SALT_WORK_FACTOR)
-    .then(salt => {
-      return bcrypt.hash(user.password, salt)
-        .then(hash => {
-          user.password = hash
-          next()
-        })
-    })
-    .catch(error => next(error))
+
+  if (user.isModified('password')) {
+    bcrypt.genSalt(SALT_WORK_FACTOR)
+      .then(salt => {
+        return bcrypt.hash(user.password, salt)
+          .then(hash => {
+            user.password = hash
+            next()
+          });
+      })
+      .catch(error => next(error))
+  } else {
+    next()
+  }
 })
 
 userSchema.pre('findOneAndUpdate', async function () {

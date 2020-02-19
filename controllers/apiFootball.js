@@ -31,3 +31,11 @@ module.exports.getNextMatches = (req, res, next) => {
     .then(matches => res.status(200).json(matches))
     .catch(next)
 }
+
+module.exports.getLeagueTable = (req, res, next) => {
+  const { leagueName, countryName } = req.params
+
+  ApiFootball.getLeagueTable(leagueName, countryName)
+    .then(leagueTable => res.status(200).json(leagueTable))
+    .catch(next)
+}

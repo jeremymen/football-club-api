@@ -1,10 +1,24 @@
 const User = require('../lib/user')
 
+module.exports.validate = (req, res, next) => {
+  const { validationToken } = req.params
+
+  User.validate(validationToken)
+    .then(user => res.status(200).json(user))
+    .catch(next)
+}
+
 module.exports.update = (req, res, next) => {
   const { userUsername } = req.params
-  const { body } = req
+  const user = {
+    fullName: req.body.fullName,
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    profilePicture: req.file ? req.file.url : undefined
+  }
   
-  User.update(body, userUsername)
+  User.update(user, userUsername)
     .then(user => {
       res.status(200).json(user)
     })

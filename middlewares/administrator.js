@@ -26,20 +26,21 @@ module.exports.isNotTheLastAdmin = (req, res, next) => {
     .then(user => {
       if (!user.club) {
         next()
-      } 
-      return Club.getOne(user.club)
-        .then(club => {
-          const isAdmin = club.admin.includes(user.id)
-          const sigleAdmin = club.admin.length === 1
-          const istheLastAdmin = isAdmin && sigleAdmin
-
-          if (istheLastAdmin) {
-            console.log('hola')
-            throw createError(403, 'you are the only one admin of your club!')
-          } else {
-            next()
-          }
-        })
+      } else {
+        return Club.getOne(user.club)
+          .then(club => {
+            const isAdmin = club.admin.includes(user.id)
+            const sigleAdmin = club.admin.length === 1
+            const istheLastAdmin = isAdmin && sigleAdmin
+  
+            if (istheLastAdmin) {
+              console.log('hola')
+              throw createError(403, 'you are the only one admin of your club!')
+            } else {
+              next()
+            }
+          })
+      }
     })
     .catch(next)
 }
