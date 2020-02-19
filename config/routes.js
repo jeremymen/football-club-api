@@ -20,6 +20,7 @@ const existMiddleware = require('../middlewares/exist')
 router.post(
   '/create', 
   authMiddleware.isNotAuthenticated, 
+  upload.single('profilePictures'),
   baseController.create
 )
 router.post(
@@ -41,7 +42,13 @@ router.patch(
   authMiddleware.isAuthenticated, 
   existMiddleware.userExist, 
   authMiddleware.isCurrentUser,
+  upload.single('profilePictures'),
   usersController.update
+)
+router.get(
+  '/users/:validationToken/validate',
+  authMiddleware.isNotAuthenticated,
+  usersController.validate
 )
 router.get(
   '/users', 
@@ -70,6 +77,7 @@ router.post(
   '/clubs', 
   authMiddleware.isAuthenticated, 
   membershipMiddleware.notAMemberOfAnyClub, 
+  upload.single('emblem'),
   clubsController.create
 )
 router.get(
@@ -88,6 +96,7 @@ router.patch(
   authMiddleware.isAuthenticated, 
   existMiddleware.clubExist,
   adminMiddleware.isAdmin, 
+  upload.single('emblem'),
   clubsController.update
 )
 router.delete(

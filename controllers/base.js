@@ -1,7 +1,15 @@
 const User = require('../lib/user')
 
 module.exports.create = (req, res, next) => {
-  User.create(req.body)
+  const user = {
+    fullName: req.body.fullName,
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    profilePicture: req.file ? req.file.url : undefined
+  }
+
+  User.create(user)
     .then((user) => {
       res.status(202).json(user)
     })

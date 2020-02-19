@@ -1,7 +1,6 @@
 const User = require('../lib/user')
 const Club = require('../lib/club')
 const Event = require('../lib/event')
-const ApiFootball = require('../lib/services/apiFootball')
 const createError = require('http-errors')
 const ObjectId = require('mongoose').Types.ObjectId
 

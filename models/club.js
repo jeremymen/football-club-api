@@ -18,6 +18,10 @@ const clubSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
+  emblem: {
+    type: String,
+    default: '../public/images/defaultClubEmblem.png'
+  },
   teamCountry: {
     type: String,
     required: true
@@ -29,10 +33,6 @@ const clubSchema = new Schema({
   team: {
     type: String,
     required: true
-  },
-  clubEmblem: {
-    type: String,
-    default: '../public/images/defaultClubEmblem.png'
   },
   description: {
     type: String,
