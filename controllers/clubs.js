@@ -77,7 +77,7 @@ module.exports.unsubscribe = (req, res, next) => {
 module.exports.delete = (req, res, next) => {
   const { clubUsername } = req.params
 
-  Club.getAllUsers(clubUsername)
+  Promise.resolve(Club.getAllUsers(clubUsername))
     .then(users => {
       return Club.removeManyUsers(users)  
         .then(() => {
