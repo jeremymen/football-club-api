@@ -174,7 +174,7 @@ router.post(
 )
 
 /** 
- * team's routes
+ * apiFootball's routes
  */
 
 router.get(
@@ -188,6 +188,11 @@ router.get(
   apiFootballController.getLeague
 )
 router.get(
+  '/league/:leagueId/teams',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getTeamsByLeagueId
+)
+router.get(
   '/matches/team/:teamName/last/:numberOfMatches',
   authMiddleware.isAuthenticated,
   apiFootballController.getLastMatches
@@ -198,9 +203,20 @@ router.get(
   apiFootballController.getNextMatches
 )
 router.get(
-  '/leagueTable/:leagueName/country/:countryName',
+  '/leagueTable/:leagueName/countries/:countryName',
   authMiddleware.isAuthenticated,
   apiFootballController.getLeagueTable
+)
+router.get(
+  '/countries',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getCountries
+)
+
+router.get(
+  '/countries/:countryName/leagues',
+  authMiddleware.isAuthenticated,
+  apiFootballController.getLeagueFromCountry
 )
 
 module.exports = router

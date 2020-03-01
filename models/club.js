@@ -20,7 +20,7 @@ const clubSchema = new Schema({
   }],
   emblem: {
     type: String,
-    default: '../public/images/defaultClubEmblem.png'
+    default: '../../../defaultClubEmblem.png'
   },
   teamCountry: {
     type: String,

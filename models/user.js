@@ -44,11 +44,11 @@ const userSchema = new Schema({
   club: {
     type: Schema.Types.ObjectId,
     ref: 'Club',
-    default: undefined
+    default: null
   },
   profilePicture: {
     type: String,
-    default: '../public/images/defaultUserProfilePicture.png'
+    default: '../../../defaultUserProfilePicture.png'
   }
 }, {
   timestamps: true,
