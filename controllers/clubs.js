@@ -5,7 +5,19 @@ module.exports.create = (req, res, next) => {
   const { body } = req
   const userId = req.session.user.id
 
-  Club.create(body, userId)
+  const user = {
+    name: body.name,
+    teamCountry: body.teamCountry,
+    teamLeague: body.teamLeague,
+    team: body.team,
+    isOfficialClub: body.isOfficialClub,
+    city: body.city,
+    address: body.address,
+    description: body.description,
+    emblem: req.file ? req.file.secure_url : undefined
+  }
+
+  Club.create(user, userId)
     .then(club => {
       res.status(200).json(club)
     })

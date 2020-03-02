@@ -6,7 +6,7 @@ module.exports.create = (req, res, next) => {
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
-    profilePicture: req.file ? req.file.url : undefined
+    profilePicture: req.file ? req.file.secure_url : undefined
   }
 
   User.create(user)

@@ -20,7 +20,7 @@ const existMiddleware = require('../middlewares/exist')
 router.post(
   '/create', 
   authMiddleware.isNotAuthenticated, 
-  upload.single('profilePictures'),
+  upload.single('profilePicture'),
   baseController.create
 )
 router.post(
@@ -42,7 +42,7 @@ router.patch(
   authMiddleware.isAuthenticated, 
   existMiddleware.userExist, 
   authMiddleware.isCurrentUser,
-  upload.single('profilePictures'),
+  upload.single('profilePicture'),
   usersController.update
 )
 router.get(

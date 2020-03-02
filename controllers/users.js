@@ -10,19 +10,21 @@ module.exports.validate = (req, res, next) => {
 
 module.exports.update = (req, res, next) => {
   const { userUsername } = req.params
-  const user = {
-    fullName: req.body.fullName,
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-    profilePicture: req.file ? req.file.url : undefined
-  }
-  
-  User.update(user, userUsername)
+  User.getOne(userUsername) 
     .then(user => {
-      res.status(200).json(user)
+      const body = {
+        fullName: req.body.fullName,
+        password: req.body.password ? req.body.password : user.password,
+        profilePicture: req.file ? req.file.secure_url : user.profilePicture
+      }
+
+      User.update(body, userUsername)
+        .then(user => {
+          res.status(200).json(user)
+        })
+        .catch(next)
     })
-    .catch(next)
+  
 }
 
 module.exports.getAll = (_, res, next) => {
