@@ -3,11 +3,25 @@ const User = require('../lib/user')
 const ObjectId = require('mongoose').Types.ObjectId
 
 module.exports.create = (req, res, next) => {
+
   const { body } = req
+
   const { id } = req.session.user
   const { clubUsername } = req.params
 
   newEvent = new Event
+
+  console.log(req.body.title)
+
+
+  // const body = {
+  //   title: req.body.title,
+  //   description: req.body.description,
+  //   date: req.body.date,
+  //   team: req.body.team,
+  //   time: req.body.time,
+  //   image: req.file ? req.file.secure_url : undefined,
+  // }
 
   newEvent.create(body, clubUsername, id)
     .then(event => {

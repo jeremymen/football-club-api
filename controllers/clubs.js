@@ -44,11 +44,22 @@ module.exports.getOne = (req, res, next) => {
 
 module.exports.update = (req, res, next) => {
   const { clubUsername } = req.params
-  const { body } = req
-  
-  Club.update(body, clubUsername)
+
+  Club.getOne(clubUsername)
     .then(club => {
-      res.status(200).json(club)
+
+      const body = {
+        name: req.body.name ? req.body.name : club.name,
+        city: req.body.city ? req.body.city : club.city,
+        address: req.body.address ? req.body.address : club.address,
+        emblem: req.file ? req.file.secure_url : club.emblem
+      }
+      
+      Club.update(body, clubUsername)
+        .then(club => {
+          res.status(200).json(club)
+        })
+        .catch(next)
     })
     .catch(next)
 }

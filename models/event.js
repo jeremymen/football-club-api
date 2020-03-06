@@ -6,9 +6,8 @@ const eventSchema = new Schema({
     type: String,
     required: true
   },
-  typeOfEvent: {
+  description: {
     type: String,
-    enum: ['Football match', 'other'],
     required: true
   },
   date: {
@@ -35,6 +34,10 @@ const eventSchema = new Schema({
   }],
   numberOfParticipant: {
     type: Number,
+  },
+  image: {
+    type: String,
+    default: '../../../default-event-image.png'
   }
 }, {
   timestamps: true,
